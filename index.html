@@ -1,33 +1,187 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>IP Address, Location, and Time Zone</title>
-</head>
-<body>
-    <h1>H2cked By Rshoody And Brooki And Group Black Hawks / for Al 7ammadi <3 </h1>
-    
-    <p id="ipAddress"></p>
-    <p id="location"></p>
-    <p id="timeZone"></p>
-
-    <script>
-        fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("ipAddress").innerText = "Your IP Address: " + data.ip;
-            });
-
-        fetch('https://ipapi.co/json/')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("location").innerText = "Your Location: " + data.city + ", " + data.region + ", " + data.country_name;
-                document.getElementById("timeZone").innerText = "Your Time Zone: " + data.timezone;
-            });
-    </script>
-</body>
-</html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- For responsiveness --> 
-    <title>H2ced By Grop Black Hawks</title>  <!-- Set title as H2ced By Grop Black Hawks -->  				     	         </head>  <body style="background: #000; color: rgb(255, 0, 0); font-family: Arial, sans-serif; text-align: center; padding: 50px 0;"><img src='https://media.discordapp.net/attachments/1138623769112485949/12397228473041556
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H2cked By Rashoody and broooki And Group Black Hawks</title>
+    <style>
+        body {
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background-image: linear-gradient(to bottom, #000000, #1a0000);
+        }
+        h1 {
+            color: #ff0000;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        .info-container {
+            background: rgba(20, 0, 0, 0.7);
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        .info-text {
+            margin: 15px 0;
+            font-size: 1.2em;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+        }
+        .kh-group-text {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 15px #ff0000;
+            margin: 30px auto;
+            padding: 20px;
+            border: 3px solid #ff0000;
+            border-radius: 10px;
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.5);
+            animation: glow 2s infinite alternate;
+        }
+        .discord-invite {
+            font-size: 1.5em;
+            color: #5865F2;
+            margin: 20px auto;
+            padding: 15px;
+            border: 2px solid #5865F2;
+            border-radius: 5px;
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .discord-invite:hover {
+            background: rgba(88, 101, 242, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+        }
+        .rashed-image {
+            display: block;
+            margin: 30px auto;
+            max-width: 300px;
+            border: 2px solid #ff0000;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        .footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px #ff0000;
+        }
+        .heart {
+            color: #ff0000;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+            }
+            to {
+                text-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+            }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio element for background music (hidden, autoplay) -->
+    <audio id="bgMusic" loop autoplay style="display:none;">
+        <source src="ras.mp3" type="audio/mpeg">
+    </audio>
+
+    <h1>H2cked By Rashoody and broooki And Group Black Hawks <span class="heart">♥</span></h1>
+    
+    <div class="info-container">
+        <p id="ipAddress" class="info-text">Loading your IP address...</p>
+        <p id="location" class="info-text">Loading your location...</p>
+        <p id="timeZone" class="info-text">Loading your time zone...</p>
+    </div>
+
+    <div class="kh-group-text">#KH Group</div>
+
+    <!-- Discord Invite Link -->
+    <a href="https://discord.gg/ix" class="discord-invite" target="_blank">Join discord.gg/ix</a>
+
+    <img src='rashed.png'
+         alt="Rashed"
+         class="rashed-image"
+         onerror="this.src='https://via.placeholder.com/300x200/000000/ff0000?text=Rashed'">
+
+    <div class="footer">
+        <p>© 1337 Group Black Hawks - All rights reserved</p>
+        <p>Powered by Black Hawks Technology</p>
+    </div>
+
+    <script>
+        // Auto-play music with interaction fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            const music = document.getElementById('bgMusic');
+            music.volume = 0.5; // Set volume to 50%
+            
+            // Try to autoplay (will work if user has interacted with page before)
+            const playPromise = music.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Autoplay was prevented - enable after first interaction
+                    document.body.addEventListener('click', function() {
+                        music.play();
+                    }, { once: true });
+                });
+            }
+        });
+
+        // Fetch IP address
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("ipAddress").innerHTML = `<strong>Your IP Address:</strong> ${data.ip}`;
+            })
+            .catch(() => {
+                document.getElementById("ipAddress").innerHTML = "<strong>IP Address:</strong> <span style='color:red'>Could not retrieve</span>";
+            });
+
+        // Fetch location and timezone
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("location").innerHTML = `
+                    <strong>Your Location:</strong> ${data.city || 'Unknown'}, ${data.region || 'Unknown'}, ${data.country_name || 'Unknown'}
+                    <br><small>ISP: ${data.org || 'Unknown'}</small>
+                `;
+                document.getElementById("timeZone").innerHTML = `
+                    <strong>Your Time Zone:</strong> ${data.timezone || 'Unknown'}
+                    <br><small>Current Time: ${new Date().toLocaleString()}</small>
+                `;
+            })
+            .catch(() => {
+                document.getElementById("location").innerHTML = "<strong>Location:</strong> <span style='color:red'>Could not retrieve</span>";
+                document.getElementById("timeZone").innerHTML = "<strong>Time Zone:</strong> <span style='color:red'>Could not retrieve</span>";
+            });
+
+        // Text effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const headings = document.querySelectorAll('h1');
+            headings.forEach(heading => {
+                heading.innerHTML = heading.innerHTML.replace('Black Hawks', '<span style="text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;">Black Hawks</span>');
+            });
+        });
+    </script>
+</body>
+</html>
