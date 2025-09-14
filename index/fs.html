@@ -1,593 +1,573 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PHANTOM ACCESS</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5 Question Quiz - Interactive Typing Edition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        html {
-            font-size: 16px; /* 1rem = 16px base */
-        }
-
         body {
-            background: #000;
-            color: #fff;
-            font-family: 'JetBrains Mono', monospace;
-            overflow: hidden;
-            min-height: 100vh;
-            position: relative;
-        }
-
-.popup-video {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 1rem;
-    width: 400px;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 0.75rem;
-    backdrop-filter: blur(0.5rem);
-    z-index: 1000;
-    box-shadow: 0 0 1.25rem rgba(255,255,255,0.1);
-}
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            animation: fadeOut 0s ease-in-out 5s forwards;
-        }
-
-        .skull-svg {
-            width: 9vw;
-            max-width: 150px;
-            height: 9vw;
-            max-height: 150px;
-            margin-bottom: 2vh;
-            animation: pulseSkull 2s ease-in-out infinite;
-        }
-
-@keyframes pulseSkull {
-    0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 1.25vw rgba(255, 255, 255, 0.3);
-    }
-    50% {
-        transform: scale(1.1);
-        box-shadow: 0 0 2.5vw rgba(255, 255, 255, 0.8);
-    }
-}
-
-.glitch-text {
-    position: relative;
-    color: #fff;
-    font-size: 2.0rem;
-    font-family: 'Orbitron', monospace;
-    font-weight: 700;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.19rem;
-    line-height: 1.6;
-}
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
-        }
-
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                visibility: hidden;
-            }
-        }
-
-        /* Main Content */
-        .main-content {
-            opacity: 0;
-            animation: fadeIn 2s ease-in-out 0.5s forwards;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
+            padding: 20px;
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Grid background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background-image:
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 1.875rem 1.875rem; /* 30px */
-            z-index: -1;
-        }
-
-        .container {
-            text-align: center;
-            max-width: 50rem; /* 800px */
-            padding: 2.5rem;
-        }
-
-        /* Avatar container */
-        .avatar-container {
-            margin-bottom: 2.5rem;
-            position: relative;
-        }
-
-        .avatar {
-            width: 31.25rem; /* 500px */
-            max-width: 90vw;
-            height: 18.75rem; /* 300px */
-            max-height: 54vw;
-            border-radius: 0%;
-            border: 0.188rem solid rgba(255,255,255,0.3);
-            box-shadow:
-                0 0 1.875rem rgba(255,255,255,0.2),
-                inset 0 0 1.875rem rgba(255,255,255,0.1);
-            background: linear-gradient(135deg, #333, #111);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
             transition: all 0.3s ease;
         }
 
-        .avatar:hover {
-            transform: scale(1.05);
-            box-shadow:
-                0 0 3.125rem rgba(255,255,255,0.4),
-                inset 0 0 1.875rem rgba(255,255,255,0.2);
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .avatar::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-            100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-        }
-
-        .avatar-placeholder {
-            font-size: 5rem;
-            color: rgba(255,255,255,0.7);
-            z-index: 1;
-        }
-
-        /* Main title */
-        .pwned-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 3.75rem; /* 60px */
-            font-weight: 900;
-            letter-spacing: 0.1rem;
-            margin-bottom: 1.25rem;
-            background: linear-gradient(45deg, #fff, #888);
+        .quiz-title {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-transform: uppercase;
-            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        @keyframes glow {
-            from {
-                filter: drop-shadow(0 0 1.25rem rgba(255,255,255,0.3));
-            }
-            to {
-                filter: drop-shadow(0 0 2.5rem rgba(255,255,255,0.6));
-            }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 30px;
         }
 
-        /* Terminal section */
-        .terminal-section {
-            background: rgba(0,0,0,0.8);
-            border: 0.063rem solid rgba(255,255,255,0.2);
-            border-radius: 0.625rem;
-            padding: 1.875rem;
-            margin-top: 2.5rem;
-            backdrop-filter: blur(0.625rem);
-            box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.5);
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.5s ease;
         }
 
-        .terminal-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.25rem;
-            padding-bottom: 0.938rem;
-            border-bottom: 0.063rem solid rgba(255,255,255,0.1);
+        .question-card {
+            display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        .terminal-dots {
-            display: flex;
-            gap: 0.5rem;
-            margin-right: 1.25rem;
+        .question-card.active {
+            display: block;
         }
 
-        .dot {
-            width: 0.75rem;
-            height: 0.75rem;
-            border-radius: 50%;
-            border: 0.063rem solid rgba(255,255,255,0.3);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .terminal-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.375rem;
-            color: #fff;
-            letter-spacing: 0.1rem;
+        .question-number {
+            color: #764ba2;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .command-line {
-            font-size: 1.5rem; 
-            margin: 0.938rem 0;
-            opacity: 0;
-            animation: typeIn 0.5s ease forwards;
-            display: flex;
-            align-items: center;
-            text-align: left;
+        .question-text {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            min-height: 60px;
         }
 
-.command-linesxb {
-    font-size: 2.5rem; 
-    margin: 0.938rem 0;
-    opacity: 0;
-    animation: typeIn 0.5s ease forwards;
-    display: block; 
-    text-align: center;
-    width: 100%;
-}
-
-
-        .command-line:nth-child(2) { animation-delay: 2.5s; }
-        .command-line:nth-child(3) { animation-delay: 3s; }
-        .command-line:nth-child(4) { animation-delay: 3.5s; }
-        .command-line:nth-child(5) { animation-delay: 4s; }
-        .command-line:nth-child(6) { animation-delay: 4.7s; }
-
-        @keyframes typeIn {
-            to {
-                opacity: 1;
-            }
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            background: #f8f9fa;
         }
 
-        .prompt {
-            color: rgba(255,255,255,0.5);
-            margin-right: 0.625rem;
+        .answer-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            background: white;
         }
 
-        .command {
-            color: #fff;
-            font-weight: 500;
+        .answer-input.correct {
+            border-color: #28a745;
+            background: #d4edda;
         }
 
-        .success {
-            color: #4ade80;
-            font-weight: 600;
+        .answer-input.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            animation: shake 0.5s ease-in-out;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 0.125rem;
-            height: 1.125rem;
-            background: #fff;
-            margin-left: 0.313rem;
-            animation: blink-cursor 1s infinite;
+        .submit-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 15px;
         }
 
-        @keyframes blink-cursor {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        /* Footer message */
-        .footer-message {
-            margin-top: 2.5rem;
-            font-size: 0.875rem;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 0.125rem;
-            text-transform: uppercase;
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .pwned-title {
-                font-size: 2rem;
-                letter-spacing: 0.25rem;
-            }
-            .avatar {
-                width: 20vw;
-                height: 20vw;
-            }
-            .avatar-placeholder {
-                font-size: 3.75rem;
-            }
-            .container {
-                padding: 1.25rem;
-            }
-        }
-
-        .learn-box {
-            position: absolute;
-            top: 2.975rem;
-            left: 1.875rem;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 1.25rem;
-            border: 0.063rem solid rgba(255,255,255,0.2);
-            border-radius: 0.75rem;
-            backdrop-filter: blur(0.5rem);
-            z-index: 1000;
-            box-shadow: 0 0 1.25rem rgba(255,255,255,0.1);
-        }
-
-        .learn-title {
-            font-family: 'Orbitron', monospace;
-            font-size: 0.875rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.063rem;
-            text-transform: uppercase;
-        }
-
-        .learn-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.625rem;
-        }
-
-        .learn-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 0.063rem solid rgba(255,255,255,0.1);
-            padding: 0.625rem 0.938rem;
-            border-radius: 0.375rem;
-            font-size: 0.813rem;
-            color: #4ade80;
-            font-family: 'JetBrains Mono', monospace;
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 20px;
             transition: all 0.3s ease;
         }
 
-        .learn-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            transform: translateX(0.313rem);
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
-        .learn-footer {
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .yes-no-buttons {
             display: flex;
-            align-items: center;
+            gap: 20px;
             justify-content: center;
-            transform: translateX(-0.313rem);
-            margin-top: 0.938rem;
-            padding-top: 0.625rem;
-            border-top: 0.063rem solid rgba(255,255,255,0.1);
-            gap: 0.625rem;
         }
 
-        .discord-icon {
-            width: 1.25rem;
-            height: 1.25rem;
-            object-fit: contain;
-            opacity: 0.8;
+        .yes-btn, .no-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
         }
 
-        .discord-link {
-            font-size: 1rem;
-            color: #fff;
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.063rem;
-            opacity: 0.8;
+        .yes-btn:hover, .no-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        .avatar.force-hover {
-    transform: scale(1.05);
-    box-shadow:
-        0 0 3.125rem rgba(255,255,255,0.4),
-        inset 0 0 1.875rem rgba(255,255,255,0.2);
-}
+        .no-btn.red {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+        }
 
-.learn-item.force-hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    transform: translateX(0.313rem);
-}
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #764ba2;
+            font-weight: bold;
+            min-height: 30px;
+        }
 
-.wanted-poster {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    width: 260px;
-    background: #111;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 0.5rem;
-    box-shadow: 0 0 1.25rem rgba(255, 255, 255, 0.1);
-    padding: 0.5rem;
-    z-index: 1000;
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-}
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
 
-.poster-img {
-    width: 100%;
-    border-radius: 0.3rem;
-    border: 1px solid rgba(255,255,255,0.1);
-    object-fit: cover;
-}
+        @keyframes shake {
+            0%, 20%, 40%, 60%, 80% { transform: translateX(0); }
+            10%, 30%, 50%, 70% { transform: translateX(-10px); }
+        }
 
-.poster-caption {
-    margin-top: 0.5rem;
-    font-size: 2rem;
-    color: #4ade80;
-    letter-spacing: 0.05rem;
-}
+        .heart {
+            color: #ff6b6b;
+            animation: heartbeat 1s infinite;
+        }
 
-.pin {
-    position: absolute;
-    top: -0.4rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0.75rem;
-    height: 0.75rem;
-    background: #ccc;
-    border-radius: 50%;
-    box-shadow: 0 0 0.25rem rgba(255,255,255,0.5);
-    z-index: 2;
-}
+        @keyframes heartbeat {
+            0%, 50%, 100% { transform: scale(1); }
+            25%, 75% { transform: scale(1.1); }
+        }
+
+        .final-message {
+            text-align: center;
+            font-size: 2em;
+            color: #667eea;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .final-message.show {
+            display: block;
+            animation: fadeIn 1s ease;
+        }
+
+        .restart-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .score-display {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            color: #764ba2;
+            font-weight: bold;
+        }
+
+        .hint {
+            font-size: 0.9em;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 5px;
+        }
+
+        /* ✨ --- Mobile Responsive Styles --- ✨ */
+        @media (max-width: 768px) {
+            body {
+                /* Allow the content to start from the top on mobile */
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+
+            .quiz-container {
+                /* Reduce the padding on smaller screens to give more space */
+                padding: 20px;
+            }
+
+            .quiz-title {
+                /* Make the main title a bit smaller */
+                font-size: 2em;
+            }
+
+            .question-text {
+                /* Adjust question font size for better readability */
+                font-size: 1.2em;
+            }
+
+            .yes-btn, .no-btn {
+                /* Make the Yes/No buttons a little smaller to ensure they fit well */
+                padding: 12px 20px;
+                font-size: 1.1em;
+            }
+        }
     </style>
 </head>
 <body>
-
-<!-- Audio element for hacked.mp3 -->
-<audio autoplay loop>
-    <source src="hacked.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-
-<!-- YouTube Music Embed -->
-<iframe 
-    width="0" 
-    height="0" 
-    src="https://www.youtube.com/embed/XDv3zOHPIVM?autoplay=1&mute=1&loop=1&playlist=XDv3zOHPIVM"
-    frameborder="0" 
-    allow="autoplay"
-    style="display:none;">
-</iframe>
-
-    <!-- Loading Screen -->
-<div class="loading-screen">
-    <div class="loading-text glitch-text" data-text="Security Alert Black Hawks Group in the system ..">
-        Security Alert Black Hawks Group in the system ..<br>discord.gg/ix لاتنسى تخش الدس
-    </div>
-</div>
-
-
-    <div class="main-content">
-        <div class="container">
-            <div class="avatar-container">
-                <div class="avatar">
-                    <img src="https://i.ibb.co/ns9cwpCr/rashed.png" alt="avatar" style="width: 100%; height: 100%; object-fit: cover;" />
-                </div>
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <h1 class="quiz-title">Interactive Quiz!</h1>
+            <div class="score-display" id="scoreDisplay">Score: 0/4</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
             </div>
+        </div>
 
-            <h1 class="pwned-title">Hacked BY Black Hawks Group</h1>
-
-            <div class="terminal-section">
-                <div class="terminal-header">
-                    <div class="terminal-dots">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                    <div class="terminal-title">discord.gg/ix</div>
-                </div>
-
-                <div class="command-line">
-                    <span class="prompt">server@system:~$</span>
-                    <span class="command">why?</span>
-                </div>
-
-                <div class="command-line">
-                    <span class="success">
-                         ? : i Just Like To Fuck <br />
-                        <br />
-                                           </span>
-                </div>
-
+        <div class="question-card active" id="q1">
+            <div class="question-number">Question 1 of 5</div>
+            <div class="question-text">When its my birthday ?</div>
+            <input type="text" class="answer-input" id="answer1" placeholder="Type your answer here..." autocomplete="off">
+            <div class="hint">Hint: U KNOW IT BITCH AND YOURS AT 4/2</div>
+            <div style="margin-top: 20px;">
+                <button class="submit-btn" onclick="checkAnswer(1)">Submit</button>
             </div>
+            <div class="feedback" id="feedback1"></div>
+            <button class="next-btn" id="next1" onclick="nextQuestion(2)">Next Question</button>
+        </div>
 
-            <div class="footer-message">Officaly Black Hawks</div>
+        <div class="question-card" id="q2">
+            <div class="question-number">Question 2 of 5</div>
+            <div class="question-text">What is my fav color ?</div>
+            <input type="text" class="answer-input" id="answer2" placeholder="Type your answer here..." autocomplete="off">
+            <div class="hint">Hint: LV shoes</div>
+            <div style="margin-top: 20px;">
+                <button class="submit-btn" onclick="checkAnswer(2)">Submit</button>
+            </div>
+            <div class="feedback" id="feedback2"></div>
+            <button class="next-btn" id="next2" onclick="nextQuestion(3)">Next Question</button>
+        </div>
+
+        <div class="question-card" id="q3">
+            <div class="question-number">Question 3 of 5</div>
+            <div class="question-text">Who do I love the most ?</div>
+            <input type="text" class="answer-input" id="answer3" placeholder="Type your answer here..." autocomplete="off">
+            <div class="hint">Hint: Say it</div>
+            <div style="margin-top: 20px;">
+                <button class="submit-btn" onclick="checkAnswer(3)">Submit</button>
+            </div>
+            <div class="feedback" id="feedback3"></div>
+            <button class="next-btn" id="next3" onclick="nextQuestion(4)">Next Question</button>
+        </div>
+
+        <div class="question-card" id="q4">
+            <div class="question-number">Question 4 of 5</div>
+            <div class="question-text">Do u Have REAL Feelings To Mubarak ?</div>
+            <input type="text" class="answer-input" id="answer4" placeholder="Type your answer here..." autocomplete="off">
+            <div class="hint">Hint: SAY IT</div>
+            <div style="margin-top: 20px;">
+                <button class="submit-btn" onclick="checkAnswer(4)">Submit</button>
+            </div>
+            <div class="feedback" id="feedback4"></div>
+            <button class="next-btn" id="next4" onclick="nextQuestion(5)">Next Question</button>
+        </div>
+
+        <div class="question-card" id="q5">
+            <div class="question-number">Question 5 of 5</div>
+            <div class="question-text">Do you love Mubarak? <span class="heart">♥</span></div>
+            <div class="yes-no-buttons">
+                <button class="yes-btn" onclick="yesAnswer()">Yes</button>
+                <button class="no-btn" id="noBtn" onclick="noAnswer()">No</button>
+            </div>
+            <div class="message" id="message"></div>
+        </div>
+
+        <div class="final-message" id="finalMessage">
+            <div id="finalScore"></div>
+            Bitch u really passed test and u did Love Mubarakkkkkkk and i love u to bitchhhhhh do a screen shot and send it to me  <span class="heart">♥</span>
+            <br><br>
+            <button class="restart-btn" onclick="restartQuiz()">Start Again</button>
         </div>
     </div>
 
     <script>
-        // Preload effect
-        window.addEventListener('load', function () {
-            setTimeout(() => {
-                document.querySelector('.loading-screen').style.display = 'none';
-            }, 2000);
-        });
+        let currentQuestion = 1;
+        let noClickCount = 0;
+        let score = 0;
+        let answeredQuestions = new Set();
 
-        // Subtle screen flicker
-        setInterval(() => {
-            if (Math.random() < 0.50) {
-                document.body.style.filter = 'brightness(1.2)';
-                setTimeout(() => {
-                    document.body.style.filter = 'brightness(1)';
-                }, 50);
-            }
-        }, 2000);
-    </script>
+        const correctAnswers = {
+            1: ['9/20'],
+            2: ['blue'],
+            3: ['juju', 'me'],
+            4: ['yes']
+        };
 
-    <script>
-    window.addEventListener('load', () => {
-        const avatar = document.querySelector('.avatar');
+        // I've made your answers case-insensitive so "Blue" and "yes" will work
+        // by converting the user's input to lowercase before checking.
 
-        setTimeout(() => {
-            avatar.classList.add('force-hover');
-
-            setTimeout(() => {
-                avatar.classList.remove('force-hover');
-            }, 3000);
-        }, 5000);
-    });
-</script>
-
-<script>
-    window.addEventListener('load', () => {
-        const items = document.querySelectorAll('.learn-item');
-        let index = 0;
-
-        function applyEffectSequentially() {
-            if (index >= items.length) {
-                index = 0;
-            }
-
-            const item = items[index];
-            item.classList.add('force-hover');
-
-            setTimeout(() => {
-                item.classList.remove('force-hover');
-                index++;
-                setTimeout(applyEffectSequentially, 1500); 
-            }, 1000); 
+        function updateProgress() {
+            const progress = (currentQuestion / 5) * 100;
+            document.getElementById('progress').style.width = progress + '%';
         }
 
-        setTimeout(applyEffectSequentially, 6000);
-    });
-</script>
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `Score: ${score}/4`;
+        }
 
+        function checkAnswer(questionNum) {
+            const input = document.getElementById(`answer${questionNum}`);
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const nextBtn = document.getElementById(`next${questionNum}`);
+            const submitBtn = input.parentNode.querySelector('.submit-btn');
+            
+            const userAnswer = input.value.trim().toLowerCase(); // Standardize to lowercase
+            const correct = correctAnswers[questionNum];
+            
+            let isCorrect = false;
+            // The check below was a bit buggy, I simplified it to be more reliable
+            if (correct.includes(userAnswer)) {
+                isCorrect = true;
+            }
+            
+            if (isCorrect) {
+                input.classList.remove('incorrect');
+                input.classList.add('correct');
+                feedback.className = 'feedback correct';
+                feedback.textContent = '✓ Correct! Great job!';
+                
+                if (!answeredQuestions.has(questionNum)) {
+                    score++;
+                    answeredQuestions.add(questionNum);
+                    updateScore();
+                }
+            } else {
+                input.classList.remove('correct');
+                input.classList.add('incorrect');
+                feedback.className = 'feedback incorrect';
+                // I've cleaned up the "correct answer" display logic
+                const displayAnswer = correct[0];
+                feedback.textContent = `✗ Not quite right. The correct answer is: ${displayAnswer.charAt(0).toUpperCase() + displayAnswer.slice(1)}`;
+            }
+            
+            submitBtn.disabled = true;
+            nextBtn.style.display = 'inline-block';
+            input.disabled = true;
+        }
+
+        function nextQuestion(nextNum) {
+            document.getElementById(`q${currentQuestion}`).classList.remove('active');
+            currentQuestion = nextNum;
+            document.getElementById(`q${currentQuestion}`).classList.add('active');
+            updateProgress();
+            
+            if (nextNum <= 4) {
+                setTimeout(() => {
+                    document.getElementById(`answer${nextNum}`).focus();
+                }, 300);
+            }
+        }
+
+        function yesAnswer() {
+            document.getElementById('message').innerHTML = 'Yay! <span class="heart">♥♥♥</span> Thank you!';
+            setTimeout(() => {
+                document.getElementById('q5').style.display = 'none';
+                document.querySelector('.quiz-header').style.display = 'none';
+                document.getElementById('finalScore').textContent = `Final Score: ${score}/4 questions correct!`;
+                document.getElementById('finalMessage').classList.add('show');
+            }, 2000);
+        }
+
+        function noAnswer() {
+            const messageEl = document.getElementById('message');
+            const noBtnEl = document.getElementById('noBtn');
+            
+            noClickCount++;
+            
+            if (noClickCount === 1) {
+                messageEl.textContent = 'Are you sure?';
+                noBtnEl.classList.add('shake');
+                setTimeout(() => noBtnEl.classList.remove('shake'), 500);
+            } else if (noClickCount === 2) {
+                messageEl.textContent = 'Noooo!';
+                noBtnEl.classList.add('shake', 'red');
+                setTimeout(() => noBtnEl.classList.remove('shake'), 500);
+            } else if (noClickCount === 3) {
+                noBtnEl.textContent = 'Yes';
+                noBtnEl.onclick = yesAnswer;
+                noBtnEl.classList.remove('red');
+                noBtnEl.classList.add('yes-btn');
+                messageEl.textContent = 'Much better! Now click Yes! 😊';
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestion = 1;
+            noClickCount = 0;
+            score = 0;
+            answeredQuestions.clear();
+            
+            document.getElementById('finalMessage').classList.remove('show');
+            
+            document.querySelector('.quiz-header').style.display = 'block';
+            
+            const allCards = document.querySelectorAll('.question-card');
+            allCards.forEach(card => card.classList.remove('active'));
+
+            for (let i = 1; i <= 5; i++) {
+                const card = document.getElementById(`q${i}`);
+                // Instead of setting display none, we control visibility with the 'active' class
+                if (card) card.style.display = 'block'; 
+
+                if (i <= 4) {
+                    const input = document.getElementById(`answer${i}`);
+                    input.value = '';
+                    input.disabled = false;
+                    input.classList.remove('correct', 'incorrect');
+                    
+                    const feedback = document.getElementById(`feedback${i}`);
+                    feedback.className = 'feedback';
+                    feedback.textContent = '';
+                    
+                    card.querySelector('.submit-btn').disabled = false;
+                    card.querySelector('.next-btn').style.display = 'none';
+                }
+            }
+            
+            const noBtn = document.getElementById('noBtn');
+            noBtn.textContent = 'No';
+            noBtn.onclick = noAnswer;
+            noBtn.classList.remove('red', 'yes-btn');
+            document.getElementById('message').textContent = '';
+            
+            document.getElementById('q1').classList.add('active');
+            
+            updateProgress();
+            updateScore();
+            
+            setTimeout(() => {
+                document.getElementById('answer1').focus();
+            }, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`answer${i}`);
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !input.disabled) {
+                        checkAnswer(i);
+                    }
+                });
+            }
+            
+            updateProgress();
+            updateScore();
+            
+            setTimeout(() => {
+                document.getElementById('answer1').focus();
+            }, 100);
+        });
+    </script>
 </body>
 </html>
