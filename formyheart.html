@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang=en dir=ltr>
+<head>
+  <meta charset=UTF-8>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0612">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Our Story | Forever & Always</title>
+  <link rel=preconnect href=https://fonts.googleapis.com>
+  <link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+  <link href=https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Dancing+Script:wght@600;700&display=swap rel=stylesheet>
+  <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css>
+  <style>
+    :root {
+      --bg-dark: #0a0612;
+      --bg-card: rgba(26, 17, 39, 0.7);
+      --card-border: rgba(224, 169, 185, 0.25);
+      --rose-glow: #e28ca0;
+      --accent-rose: #d65d7a;
+      --accent-gold: #e5c158;
+      --text-main: #fcf7f8;
+      --text-muted: #bda8b3;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      position: relative;
+    }
+    html { height: -webkit-fill-available; }
+    #space-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: max(20px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(60px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+    }
+
+    .music-widget {
+      position: fixed;
+      top: max(16px, env(safe-area-inset-top));
+      right: max(16px, env(safe-area-inset-right));
+      z-index: 100;
+      background: rgba(20, 12, 30, 0.85); backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border); border-radius: 50px;
+      padding: 10px 18px; display: flex; align-items: center; gap: 12px;
+      cursor: pointer; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); transition: all 0.3s ease;
+    }
+    .music-widget:hover { transform: translateY(-2px); border-color: var(--rose-glow); }
+    .music-widget i { font-size: 1.2rem; color: var(--rose-glow); }
+    .music-waves { display: flex; align-items: flex-end; gap: 3px; height: 16px; }
+    .music-waves span { width: 3px; height: 4px; background: var(--rose-glow); border-radius: 2px; }
+    .music-playing .music-waves span:nth-child(1) { animation: wave 1s infinite 0.1s; }
+    .music-playing .music-waves span:nth-child(2) { animation: wave 1s infinite 0.3s; }
+    .music-playing .music-waves span:nth-child(3) { animation: wave 1s infinite 0.2s; }
+    .music-playing .music-waves span:nth-child(4) { animation: wave 1s infinite 0.4s; }
+    @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+    .music-text { font-size: 0.85rem; color: var(--text-muted); }
+
+    .hero { text-align: center; padding: 60px 0 35px; display: flex; flex-direction: column; align-items: center; }
+    .glowing-heart { font-size: 3rem; color: var(--rose-glow); animation: heartbeat 1.8s infinite ease-in-out; margin-bottom: 18px; }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.18); } 30% { transform: scale(1); } 45% { transform: scale(1.15); } }
+    .hero-title { font-family: 'Playfair Display', serif; font-size: 3.4rem; font-weight: 700; background: linear-gradient(135deg, #fff 20%, #ffccd7 60%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px; line-height: 1.2; }
+    .hero-subtitle { font-size: 1.15rem; color: var(--text-muted); max-width: 620px; line-height: 1.8; font-weight: 300; word-break: break-word; }
+
+    .counter-section {
+      background: var(--bg-card); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border); border-radius: 28px;
+      padding: 32px 20px; text-align: center; margin: 30px 0 50px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5); position: relative; overflow: hidden;
+    }
+    .counter-header { font-size: 1.15rem; font-weight: 600; color: var(--rose-glow); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .counter-date-badge { display: inline-block; font-size: 0.85rem; color: var(--accent-gold); background: rgba(229, 193, 88, 0.1); border: 1px solid rgba(229, 193, 88, 0.3); padding: 6px 16px; border-radius: 20px; margin-bottom: 25px; }
+    .timer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+    .timer-card { background: rgba(14, 9, 22, 0.75); border: 1px solid rgba(226, 140, 160, 0.2); border-radius: 18px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; }
+    .timer-card:hover { border-color: var(--rose-glow); transform: translateY(-4px); }
+    .timer-number { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 700; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .timer-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .counter-footer { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: #e9d9e2; margin-top: 10px; }
+
+    .section-title { text-align: center; font-family: 'Playfair Display', serif; font-size: 2.4rem; color: #ffffff; margin: 60px 0 35px; }
+    .reasons-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; }
+    .reason-card { background: var(--bg-card); border: 1px solid var(--card-border); border-radius: 20px; padding: 28px 22px; text-align: left; }
+    .reason-icon { width: 50px; height: 50px; background: rgba(214, 93, 122, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--rose-glow); margin-bottom: 18px; }
+
+    .letters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .letter-envelope { background: linear-gradient(145deg, rgba(30, 20, 45, 0.85), rgba(18, 11, 28, 0.85)); border: 1px dashed rgba(226, 140, 160, 0.35); border-radius: 18px; padding: 24px 20px; text-align: center; cursor: pointer; }
+    .letter-envelope:hover { border-style: solid; border-color: var(--rose-glow); transform: scale(1.03); }
+    .envelope-icon { font-size: 2.2rem; color: var(--accent-gold); margin-bottom: 14px; }
+    .letter-title { font-size: 1.05rem; font-weight: 500; color: #fce7ec; margin-bottom: 8px; }
+    .letter-badge { display: inline-block; font-size: 0.75rem; color: var(--rose-glow); background: rgba(226, 140, 160, 0.1); padding: 3px 12px; border-radius: 12px; }
+
+    .timeline { position: relative; margin: 20px 0; padding: 10px 0; }
+    .timeline::before { content: ''; position: absolute; top: 0; bottom: 0; left: 24px; width: 2px; background: linear-gradient(180deg, var(--rose-glow), transparent); }
+    .timeline-item { position: relative; margin-bottom: 35px; padding-left: 55px; }
+    .timeline-dot { position: absolute; left: 17px; top: 5px; width: 16px; height: 16px; background: var(--accent-rose); border: 3px solid var(--bg-dark); border-radius: 50%; }
+    .timeline-content { background: var(--bg-card); border: 1px solid var(--card-border); border-radius: 18px; padding: 20px 24px; }
+    .timeline-date { font-size: 0.85rem; color: var(--accent-gold); margin-bottom: 6px; }
+
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(6, 3, 10, 0.85); backdrop-filter: blur(10px); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: all 0.35s ease; }
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    .letter-modal { background: #140b1e; border: 1px solid var(--rose-glow); border-radius: 24px; max-width: 550px; width: 100%; padding: 35px 30px; position: relative; }
+    .modal-close { position: absolute; top: 20px; right: 20px; background: rgba(255, 255, 255, 0.1); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; }
+    .modal-header-icon { font-size: 2.2rem; color: var(--rose-glow); margin-bottom: 15px; text-align: center; }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; text-align: center; color: #fff; margin-bottom: 20px; }
+    .modal-body { font-family: 'Playfair Display', serif; font-size: 1.15rem; line-height: 1.9; color: #ede2e6; background: rgba(25, 14, 38, 0.5); padding: 22px; border-radius: 16px; border-left: 3px solid var(--rose-glow); }
+
+    .secret-vault { background: linear-gradient(135deg, rgba(32, 18, 48, 0.7), rgba(16, 9, 25, 0.7)); border: 1px solid var(--card-border); border-radius: 26px; padding: 40px 30px; text-align: center; margin: 60px 0 30px; }
+    .vault-btn { background: linear-gradient(135deg, #e28ca0, #d65d7a); color: #fff; border: none; padding: 14px 36px; font-size: 1.05rem; font-weight: 600; border-radius: 30px; cursor: pointer; }
+
+    .floating-heart { position: fixed; color: var(--rose-glow); font-size: 1.4rem; pointer-events: none; z-index: 999; animation: floatUp 3.5s linear forwards; }
+    @keyframes floatUp { 0% { transform: translateY(0) scale(0.6); opacity: 1; } 100% { transform: translateY(-100vh) scale(1.4); opacity: 0; } }
+    footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(224, 169, 185, 0.15); color: var(--text-muted); font-size: 0.9rem; }
+
+    /* iPhone & Mobile specific adjustments (iPhone 13, 14, 15, 16, 17 Pro/Max) */
+    @media (max-width: 600px) {
+      .hero { padding: 45px 0 25px; }
+      .hero-title { font-size: 2.1rem; line-height: 1.25; }
+      .hero-subtitle { font-size: 1rem; line-height: 1.7; padding: 0 5px; }
+      .glowing-heart { font-size: 2.4rem; margin-bottom: 12px; }
+      .music-widget { padding: 7px 14px; gap: 8px; font-size: 0.8rem; }
+      .music-text { font-size: 0.78rem; }
+      .counter-section { padding: 24px 14px; border-radius: 22px; margin: 25px 0 35px; }
+      .counter-header { font-size: 0.95rem; }
+      .counter-date-badge { font-size: 0.75rem; padding: 5px 12px; margin-bottom: 18px; }
+      .timer-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
+      .timer-card { padding: 14px 4px; border-radius: 14px; }
+      .timer-number { font-size: 1.7rem; margin-bottom: 2px; }
+      .timer-label { font-size: 0.65rem; letter-spacing: 0.5px; }
+      .counter-footer { font-size: 1.15rem; line-height: 1.5; padding: 0 5px; }
+      .section-title { font-size: 1.8rem; margin: 40px 0 25px; }
+      .reasons-grid, .letters-grid { grid-template-columns: 1fr; gap: 14px; }
+      .reason-card { padding: 20px 18px; border-radius: 16px; }
+      .letter-envelope { padding: 20px 16px; border-radius: 16px; }
+      .letter-title { font-size: 0.98rem; }
+      .secret-vault { padding: 28px 18px; border-radius: 20px; margin: 40px 0 20px; }
+      .secret-vault h3 { font-size: 1.2rem; }
+      .vault-btn { width: 100%; justify-content: center; padding: 12px 20px; font-size: 0.95rem; }
+      .letter-modal { width: 92%; max-width: 92%; padding: 26px 18px; border-radius: 20px; }
+      .modal-title { font-size: 1.3rem; margin-bottom: 14px; }
+      .modal-body { font-size: 1rem; line-height: 1.75; padding: 16px; }
+      .modal-close { top: 12px; right: 12px; width: 32px; height: 32px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id=space-canvas></canvas>
+
+  <div class=music-widget id=musicToggle>
+    <i class=fa-solid fa-music id=musicIcon></i>
+    <div class=music-waves id=musicWaves><span></span><span></span><span></span><span></span></div>
+    <span class=music-text id=musicText>Ambient Music</span>
+  </div>
+
+  <div class=container>
+    <header class=hero>
+      <div class=glowing-heart><i class=fa-solid fa-heart></i></div>
+      <h1 class=hero-title>To my amazing lil princess</h1>
+      <p class=hero-subtitle>I Will ALWAYS love u no matter what happened my love غ.</p>
+    </header>
+
+    <section class=counter-section>
+      <div class=counter-header><i class=fa-regular fa-clock></i><span>My Heart Has Been Yours For</span></div>
+      <div class=counter-date-badge><i class=fa-solid fa-calendar-check style=margin-right: 6px;></i>October 5, 2026 — 11:16 PM</div>
+
+      <div class=timer-grid>
+        <div class=timer-card><div class=timer-number id=days>00</div><div class=timer-label>Days</div></div>
+        <div class=timer-card><div class=timer-number id=hours>00</div><div class=timer-label>Hours</div></div>
+        <div class=timer-card><div class=timer-number id=minutes>00</div><div class=timer-label>Minutes</div></div>
+        <div class=timer-card><div class=timer-number id=seconds>00</div><div class=timer-label>Seconds</div></div>
+      </div>
+      <p class=counter-footer id=counterCaption>Always remeber you will stil be my 1St lover in this whole world</p>
+    </section>
+    <div class=secret-vault>
+      <i class=fa-solid fa-lock style=font-size: 2rem; color: var(--accent-gold); margin-bottom: 15px; display: block;></i>
+      <h3 style=font-size: 1.4rem; margin-bottom: 10px; color: #fff;>A Secret Love Note</h3>
+      <p style=color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem;>Click below to unlock a note written straight from my heart.</p>
+      <button class=vault-btn onclick=openVault()><i class=fa-solid fa-key></i> <span>Unlock Secret Note</span></button>
+    </div>
+  <div class=modal-overlay id=modalOverlay onclick=closeModal(event)>
+    <div class=letter-modal onclick=event.stopPropagation()>
+      <button class=modal-close onclick=closeModalDirect()><i class=fa-solid fa-xmark></i></button>
+      <div class=modal-header-icon id=modalIcon>💌</div>
+      <h3 class=modal-title id=modalTitle>Letter Title</h3>
+      <div class=modal-body id=modalBody>Letter content...</div>
+    </div>
+  </div>
+
+  <script>
+    // Fallback baseline start date: October 5, 2026 at 11:16 PM
+    const startMs = new Date(2026, 9, 5, 23, 16, 0).getTime();
+    let apiOffset = 0;
+
+    // Connect to free WorldTime API to know the exact global date & time
+    fetch('https://worldtimeapi.org/api/ip')
+      .then(res => res.json())
+      .then(data => {
+        const netTime = new Date(data.datetime).getTime();
+        apiOffset = netTime - Date.now();
+      })
+      .catch(() => {});
+
+    function updateCounter() {
+      const nowMs = Date.now() + apiOffset;
+      let diff = Math.max(0, nowMs - startMs);
+
+      // Convert milliseconds to days, hours, minutes, seconds
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('days').innerText = String(days).padStart(2, '0');
+      document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+      document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+      document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    const lettersData = {
+      miss: { icon: '<i class="fa-solid fa-heart-pulse"></i>', title: "Open when you miss me 🥺", body: "If my face pops into your mind or you suddenly feel a longing wave, close your eyes and know that in this exact moment, I am most likely thinking of you too. Missing you is a warm feeling reminding me that my heart belongs entirely to you." },
+      tired: { icon: '<i class="fa-solid fa-feather"></i>', title: "Open when your day feels heavy 🌸", body: "Remember that you only need to do your best today, not carry the weight of the entire world. Take a deep breath, relax your shoulders, and know there is someone who loves you unconditionally and is endlessly proud of you." },
+      doubt: { icon: '<i class="fa-solid fa-infinity"></i>', title: "Open when you need reminding 💫", body: "I chose you because you are the light I prayed for. Loving you isn't just for now—it's for a lifetime." },
+      smile: { icon: '<i class="fa-regular fa-face-grin-stars"></i>', title: "Open when you want to smile 😊", body: "Did you know that when you smile, you become hands-down the most gorgeous person in this entire universe? Smile right now... I see you!" },
+        vault: { icon: '<i class="fa-solid fa-gem"></i>', title: "A message for my only princess", body: "hi غاليه hru hope u r doing good i love you soo much soo i made this for u to remeber how long we've been tg soo i love u baby." }
+    };
+
+    function openLetter(key) {
+      const data = lettersData[key];
+      if (!data) return;
+      document.getElementById('modalIcon').innerHTML = data.icon;
+      document.getElementById('modalTitle').innerText = data.title;
+      document.getElementById('modalBody').innerHTML = data.body;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+    function openVault() { openLetter('vault'); }
+    function closeModal(e) { if (e.target.id === 'modalOverlay') document.getElementById('modalOverlay').classList.remove('active'); }
+    function closeModalDirect() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+    // Starry night
+    const canvas = document.getElementById('space-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = []; const numStars = 100;
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas); resizeCanvas();
+    for (let i = 0; i < numStars; i++) { stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 1.8 + 0.4, alpha: Math.random(), speed: Math.random() * 0.02 + 0.005, increasing: Math.random() > 0.5 }); }
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        if (star.increasing) { star.alpha += star.speed; if (star.alpha >= 1) star.increasing = false; }
+        else { star.alpha -= star.speed; if (star.alpha <= 0.2) star.increasing = true; }
+        ctx.fillStyle = `rgba(240, 220, 240, ${star.alpha})`;
+        ctx.beginPath(); ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2); ctx.fill();
+      });
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+  </script>
+</body>
+</html>
